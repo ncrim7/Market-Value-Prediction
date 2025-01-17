@@ -345,7 +345,7 @@ plt.show()
 
 ### 2. Model Sonuçlarının Yorumlanması 🧠💬🔍
 - Yüksek korelasyon gösteren değişkenler, model performansını olumlu etkilemiştir.
-- "Yaş" ve "Pozisyon" değişkenlerinin piyasa değeri üzerinde belirgin bir etkisi olduğu gözlemlenmiştir.
+- "Yaş", "Gol", "Asist" ve "Pozisyon" değişkenlerinin piyasa değeri üzerinde belirgin bir etkisi olduğu gözlemlenmiştir.
 
 ### 3. Öne Çıkan Bulgular 🌟📊📚
 - Verilerin logaritmik dönüşüm ile işlenmesi, model performansını önemli ölçüde artırmıştır.
