@@ -14,6 +14,7 @@ Bu proje, futbol oyuncularının piyasa değerlerini tahmin etmek için veri bil
 # Eksik veri kontrolü
 print("Eksik değerler:\n", df.isnull().sum())
 ```
+![Eksik veriler](null.PNG)
 
 - **Gereksiz Veriler**:
   - "Ad" ve "Doğum Tarihi" gibi modelin performansına katkı sağlamayan sütunlar analizden çıkarıldı.
