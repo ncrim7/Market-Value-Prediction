@@ -14,6 +14,7 @@ Bu proje, futbol oyuncularının piyasa değerlerini tahmin etmek için veri bil
 # Eksik veri kontrolü
 print("Eksik değerler:\n", df.isnull().sum())
 ```
+![Eksik veriler](null.PNG)
 
 - **Gereksiz Veriler**:
   - "Ad" ve "Doğum Tarihi" gibi modelin performansına katkı sağlamayan sütunlar analizden çıkarıldı.
@@ -136,6 +137,7 @@ plt.ylabel('Frekans')
 plt.grid(axis='y', linestyle='--', alpha=0.7)
 plt.show()
 ```
+![Logaritmik Dönüşüm](2.PNG)
 
 ### 7. Grafiksel Analiz ve Görselleştirme 📊📈🎥
 - Veri dağılımını anlamak için histogramlar ve kutu grafikleri oluşturuldu.
@@ -149,6 +151,7 @@ sns.heatmap(correlation_matrix, annot=True, fmt=".2f", cmap='coolwarm', cbar=Tru
 plt.title('Korelasyon Matrisi', fontsize=16)
 plt.show()
 ```
+![Korelasyon Matrisi](3.PNG)
 
 - **Histogram Örneği**:
 ```python
@@ -178,6 +181,11 @@ for column in encoded_columns:
     plt.grid(axis='y', linestyle='--', alpha=0.7)
     plt.show()
 ```
+![Histogram](4.PNG)
+![Histogram_2](5.PNG)
+![Yas_box](6.PNG)
+![Pozisyon_box](7.PNG)
+![ülke_box](8.PNG)
 
 ### 8. İşlenebilir Verinin Elde Edilmesi 🏗️✅📂
 Bu adımlar sonucunda, eksiksiz, kategorik verileri sayısal hale getirilmiş ve uç değerlerden arındırılmış bir veri seti elde edilmiştir. Bu veri, makine öğrenmesi modelleri için hazır hale getirilmiştir.
@@ -237,6 +245,7 @@ dt_reg = DecisionTreeRegressor()
 dt_reg.fit(X_train, y_train)
 y_pred_dt_reg = dt_reg.predict(X_test)
 ```
+![XGBoost](9.PNG)
 
 ### 4. Performans Değerlendirme 📋📉✅
 Modellerin performansı, Mean Squared Error (MSE) ve R² Skoru kullanılarak değerlendirilmiştir.
@@ -261,6 +270,7 @@ print("Decision Tree Regressor")
 print("R-squared:", r2_score(y_test, y_pred_dt_reg))
 print("Mean Squared Error:", mean_squared_error(y_test, y_pred_dt_reg))
 ```
+
 
 ### 5. Modellerin Karşılaştırılması 🥇🥈🥉
 Aşağıda, uygulanan algoritmaların performans karşılaştırması verilmiştir:
@@ -310,6 +320,7 @@ y_pred_best = best_model.predict(X_test)
 print("Mean Squared Error (MSE):", mean_squared_error(y_test, y_pred_best))
 print("Mean Absolute Error (MAE):", mean_absolute_error(y_test, y_pred_best))
 ```
+![Best_Model](11.PNG)
 
 ### 7. Gerçek vs. Tahmin Görselleştirmesi 🎨
 ```python
@@ -321,6 +332,8 @@ plt.xlabel('Gerçek Piyasa Değeri')
 plt.ylabel('Tahmin Edilen Piyasa Değeri')
 plt.show()
 ```
+![Graph](12.PNG)
+
 ---
 
 ## Sonuç Analizi 🏁🔎✨
