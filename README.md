@@ -286,7 +286,7 @@ print("Mean Squared Error:", mean_squared_error(y_test, y_pred_dt_reg))
 Aşağıda, uygulanan algoritmaların performans karşılaştırması verilmiştir:
 
 | Model               |MAE || MSE   | R² Skoru |
-|---------------------|--||--------|----------|
+|---------------------|--|--|--------|----------|
 | Linear Regression   |1.059851 | 1.7333 | 0.655190 |
 | Random Forest       |0.896791 | 1.2790 | 0.837311 |
 | Decision Tree       |1.274155| 2.6346 | 0.293911 |
@@ -345,6 +345,7 @@ plt.ylabel('Tahmin Edilen Piyasa Değeri')
 plt.show()
 ```
 ![Graph](image/12.PNG)
+
 Bu adımlar, model optimizasyonu ve tahmin doğruluğunu görselleştirme süreçlerini kapsamaktadır.
 
 ---
