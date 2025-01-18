@@ -285,12 +285,12 @@ print("Mean Squared Error:", mean_squared_error(y_test, y_pred_dt_reg))
 ### 5. Modellerin Karşılaştırılması 🥇🥈🥉
 Aşağıda, uygulanan algoritmaların performans karşılaştırması verilmiştir:
 
-| Model               | MSE   | R² Skoru |
-|---------------------|--------|----------|
-| Linear Regression   | 1.7333 | 0.655190 |
-| Random Forest       | 1.2790 | 0.837311 |
-| Decision Tree       | 2.6346 | 0.293911 |
-| XGBoost             | 1.2372 | 0.854052 |
+| Model               |MAE || MSE   | R² Skoru |
+|---------------------|--||--------|----------|
+| Linear Regression   |1.059851 | 1.7333 | 0.655190 |
+| Random Forest       |0.896791 | 1.2790 | 0.837311 |
+| Decision Tree       |1.274155| 2.6346 | 0.293911 |
+| XGBoost             |0.860947 | 1.2372 | 0.854052 |
 
 ### 6. En İyi Modelin Belirlenmesi ve Hiperparametre Optimizasyonu ✨
 Performans karşılaştırmalarına dayanarak, en yüksek R² skoruna sahip model seçilmiştir. Ayrıca, XGBoost modeli için manuel hiperparametre arama gerçekleştirilmiştir.
