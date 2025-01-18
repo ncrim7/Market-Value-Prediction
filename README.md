@@ -2,7 +2,17 @@
 # Market Value Prediction of Football Players Project 🎯⚽📊
 
 ## Giriş ve Genel Bakış 🌟✨📋
-Bu proje, futbol oyuncularının piyasa değerlerini tahmin etmek için veri bilimi ve makine öğrenmesi tekniklerini kullanır. Amacı, oyuncu performans istatistikleri, demografik bilgileri ve takım ilişkilerine dayalı olarak doğru tahminler yapmaktır. Bu rehber, projenin tüm aşamalarını ayrıntılı bir şekilde açıklamaktadır.
+**Proje Amacı:**
+
+- Oyuncuların piyasa değerlerini tahmin etmek için veriye dayalı bir model oluşturmak.
+
+- Kulüp transfer stratejilerine katkı sağlamak ve futbolcu değerlendirme sürecini daha verimli hale getirmek.
+
+  - Transfer Stratejileri: Takımların, oyuncuların potansiyel piyasa değerlerini tahmin ederek transfer pazarlıklarında daha iyi kararlar alabilmesini sağlamak.
+
+  - Kaynak Verimliliği: Kısıtlı transfer bütçelerini en iyi şekilde kullanabilmek için veriye dayalı karar verme mekanizmaları oluşturmak.
+
+  - Adil Değerlendirme: Oyuncuların istatistiksel performans verilerine dayalı olarak tarafsız bir değerlendirme sağlayarak subjektif faktörlerin etkisini azaltmak.
 
 ## Veri Hazırlama Teknikleri 🛠️📈🔍
 
