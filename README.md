@@ -7,9 +7,7 @@ Bu proje, futbol oyuncularının piyasa değerlerini tahmin etmek için veri bil
 ## Veri Hazırlama Teknikleri 🛠️📈🔍
 
 ### 1. Eksik ve Gereksiz Verilerin Temizlenmesi 🧹✂️💾
-- **Eksik Veriler**: Veri setindeki eksik değerler tespit edildi ve uygun yöntemlerle dolduruldu.
-  - Örneğin, "Maç", "Gol", "Asist" gibi sayısal sütunlar için eksik değerler sütun ortalaması ile dolduruldu.
-  - Kategorik sütunlarda eksik değer olmadığı için ek bir işlem gerekmedi.
+- **Eksik Veriler**: Veri setlerinde eksik veriler sıkça karşılaşılan bir durumdur ve bu veriler, modelin performansını ve doğruluğunu olumsuz etkileyebilir. Bu nedenle, eksik verilerin dikkatlice ele alınması gerekmektedir. Veri setindeki eksik değerler, ilgili sütunlarda NaN veya boş değer olarak tespit edilmiştir. Bu işlemi gerçekleştirmek için aşağıdaki Python kodu kullanılmıştır:
 ```python
 # Eksik veri kontrolü
 print("Eksik değerler:\n", df.isnull().sum())
@@ -17,13 +15,15 @@ print("Eksik değerler:\n", df.isnull().sum())
 ![Eksik veriler](image/null.PNG)
 
 - **Gereksiz Veriler**:
-  - "Ad" ve "Doğum Tarihi" gibi modelin performansına katkı sağlamayan sütunlar analizden çıkarıldı.
+  - Bazı sütunlar modelin performansına doğrudan katkı sağlamadığı için veri setinden çıkarılmıştır. Bu adım, veriyi daha sade hale getirir ve modelin öğrenme sürecini optimize eder.
+  - "Ad": Oyuncunun adı modelin tahmin yeteneği üzerinde bir etkisi olmadığından çıkarılmıştır.
+  - "Doğum Tarihi": "Yaş" gibi daha anlamlı bir bilgi zaten veri setinde bulunduğundan, bu sütunun kullanılması gereksiz olmuştur.
 ```python
 columns_to_drop = ['Ad','Doğum Tarihi']  # Gereksiz kolonlar
 df_cleaned = df_cleaned.drop(columns=columns_to_drop, axis=1)
 ```
 - **Sütunları Türkçeye Çevirme**:
-  - Featurelar daha anlaşılır bir hale getirildi.
+  - Veri setindeki sütun isimlerinin daha anlaşılır hale getirilmesi, analiz ve modelleme süreçlerini kolaylaştırır. Bu adımda, orijinal sütun isimleri Türkçeye çevrilerek daha anlamlı hale getirilmiştir.
 ```python
 # Feature isimlerini Türkçeye çevirelim
 df.rename(columns={
@@ -38,9 +38,14 @@ df.rename(columns={
     'İ.O/M': 'İsabetli_Orta/Maç',
 }, inplace=True)
 ```
+Bu adım, veri setinin çok daha okunabilir hale gelmesini sağlamıştır ve kod geliştirme sürecinde karmaşayı azaltmıştır.
 
 ### 2. Sayısal Verilerin Dönüştürülmesi 🔄📉📈
-- **Sayısal Verilerin Formatlanması**: Virgül yerine nokta kullanımı sağlanmış ve sayısal sütunlar uygun türlere dönüştürülmüştür.
+Bazı veri sütunlarında virgül (",") kullanımı nedeniyle sayısal verilere erişim ve işlem yapmak zorlaşabilmektedir. Bu nedenle tüm sayısal verilerde virgül yerine nokta kullanılması sağlanmış ve veriler uygun türlere dönüştürülmüştür.
+- **Sayısal Verilerin Formatlanması**: 
+  - ***Piyasa Değeri Sütunu:*** Bu sütundaki tüm "." ve "," karakterleri temizlenmiş, veriler sayısal türe dönüştürülmüştür.
+  - ***Diğer Sütunlar:*** Sayısal veri içeren diğer sütunlarda benzer temizlik ve dönüştürme işlemleri uygulanmıştır.
+
 
 
 ```python
@@ -65,7 +70,9 @@ for column in columns_to_clean:
 ```
 
 ### 3. Hatalı Değerlerin Düzeltilmesi ve Eksik Verilerin Yönetimi 🛠️💡
-- "Yaş" sütunundaki parantezler temizlenmiş ve hatalı yaş değerleri düzeltilmiştir.
+- **Hatalı Değerlerin Düzeltilmesi**
+
+  - Bazı sütunlarda hatalı veri girişleri tespit edilmiştir. Örneğin, "Yaş" sütununda yer alan hatalı girişler (ör. 0 değeri) modelin doğruluğunu olumsuz etkileyebilir. Bu değerler aşağıdaki şekilde düzeltilmiştir:
 
 ```python
 # "Yaş" sütunundaki parantezleri temizleme
@@ -75,7 +82,7 @@ df['Yaş'] = df['Yaş'].str.extract(r'(\d+)').astype(float)
 df_cleaned.loc[df['Yaş'] == 0, 'Yaş'] = 25
 ```
 
-- Eksik değerler, uygun yöntemlerle giderilmiştir.
+- Eksik değerler, uygun yöntemlerle giderilmiştir. Özellikle sayısal sütunlarda eksik değerler sütun ortalaması ile doldurulmuştur. Bu işlem, sütun içindeki genel dağılımı bozmadan eksik verileri tamamlar.
 
 ```python
 # Eksik değer içeren satırları silme
@@ -93,14 +100,14 @@ df_cleaned['Asist'] = df_cleaned['Asist'].fillna(df_cleaned['Asist'].mean())
 ```
 
 ### 4. Verilerin Kategorize Edilmesi 📊🔢🎨
-- "Kaleci" pozisyonunda olan oyuncular veri setinden çıkarılmıştır.
+- "Kaleci" pozisyonunda olan oyuncular, diğer pozisyonlara kıyasla farklı istatistiklere sahip olduğu için analiz ve modelleme sürecinden çıkarılmıştır. Bu işlem aşağıdaki kod ile gerçekleştirilmiştir:
 
 ```python
 # Pozisyon sütununda "Kaleci" olan oyuncuları filtreleme
 df_cleaned = df[~df['Pozisyon'].str.contains("Kaleci", case=False, na=False)]
 ```
 
-- Kategorik sütunlar sayısal değerlere dönüştürülmüştür.
+- Kategorik sütunlar, modelleme sürecine uygun hale getirilmek için sayısal değerlere dönüştürülmüştür. Bu işlem, LabelEncoder kullanılarak gerçekleştirilmiştir:
 
 ```python
 from sklearn.preprocessing import LabelEncoder
@@ -113,7 +120,7 @@ df_cleaned['Pozisyon_encoded'] = le.fit_transform(df_cleaned['Pozisyon'])
 ```
 
 ### 5. Kategorik ve Sayısal Sütunların Ayrılması 🏷️📊
-- Veri setindeki sütunlar, türlerine göre ayrılmıştır.
+- Veri setindeki sütunlar, türlerine göre kategorik ve sayısal olarak ayrılmıştır. Bu ayrım, veri analizinde ve modelleme süreçlerinde daha fazla esneklik sağlamaktadır.
 
 ```python
 # Sütunları kategorik ve sayısal olarak ayırma
@@ -123,7 +130,7 @@ non_categorical_columns = [col for col in df_cleaned.columns if col not in categ
 ```
 
 ### 6. Logaritmik Dönüşüm ve Analiz 🔄📈
-  - "Piyasa Değeri" sütunu modellerin performans analizi açısından çok fazla büyük değerlere sahip olduğu için logaritmik dönüşüme tabi tutulmuş ve dağılım incelenmiştir:
+  - "Piyasa Değeri" sütunu modellerin performans analizi açısından çok fazla büyük değerlere sahip olduğu için logaritmik dönüşüme tabi tutulmuş ve dağılım incelenmiştir
 ```python
 # Log dönüşüm
 df_cleaned['Piyasa Değeri (Log)'] = np.log1p(df_cleaned['Piyasa Değeri'])
@@ -154,6 +161,7 @@ plt.show()
 ![Korelasyon Matrisi](image/3.PNG)
 
 - **Histogram Örneği**:
+Bu bölümde, veri setindeki sütunların dağılımları histogramlar kullanılarak analiz edilmiştir. Sayısal ve kategorik verilerin daha iyi anlaşılması amacıyla ayrı grafikler oluşturulmuştur.
 ```python
 # Nümerik sütunları seçme
 numerical_columns = df_cleaned.select_dtypes(include=['number']).columns
@@ -181,6 +189,8 @@ for column in encoded_columns:
     plt.grid(axis='y', linestyle='--', alpha=0.7)
     plt.show()
 ```
+Histogramlar, veri setindeki sayısal ve kategorik değişkenlerin dağılımlarını göstermektedir.
+
 ![Histogram](image/4.PNG)
 ![Histogram_2](image/5.PNG)
 ![Yas_box](image/6.PNG)
@@ -283,6 +293,7 @@ Aşağıda, uygulanan algoritmaların performans karşılaştırması verilmişt
 | XGBoost             | 1.2372 | 0.854052 |
 
 ### 6. En İyi Modelin Belirlenmesi ve Hiperparametre Optimizasyonu ✨
+Performans karşılaştırmalarına dayanarak, en yüksek R² skoruna sahip model seçilmiştir. Ayrıca, XGBoost modeli için manuel hiperparametre arama gerçekleştirilmiştir.
 ```python
 best_model = performance_df.loc[performance_df['R2 Score'].idxmax()]
 print("En İyi Model:\n", best_model)
@@ -323,6 +334,7 @@ print("Mean Absolute Error (MAE):", mean_absolute_error(y_test, y_pred_best))
 ![Best_Model](image/11.PNG)
 
 ### 7. Gerçek vs. Tahmin Görselleştirmesi 🎨
+Tahmin edilen ve gerçek piyasa değerleri, scatter plot ile görselleştirilmiştir. Bu, model performansını görsel olarak değerlendirmek için etkili bir yöntemdir.
 ```python
 plt.figure(figsize=(10, 6))
 plt.scatter(y_test, y_pred_xgb, alpha=0.6, color='blue')
@@ -333,6 +345,7 @@ plt.ylabel('Tahmin Edilen Piyasa Değeri')
 plt.show()
 ```
 ![Graph](image/12.PNG)
+Bu adımlar, model optimizasyonu ve tahmin doğruluğunu görselleştirme süreçlerini kapsamaktadır.
 
 ---
 
