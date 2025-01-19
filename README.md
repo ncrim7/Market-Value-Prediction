@@ -2,28 +2,38 @@
 # Market Value Prediction of Football Players Project 🎯⚽📊
 
 ## Giriş ve Genel Bakış 🌟✨📋
-Bu proje, futbol oyuncularının piyasa değerlerini tahmin etmek için veri bilimi ve makine öğrenmesi tekniklerini kullanır. Amacı, oyuncu performans istatistikleri, demografik bilgileri ve takım ilişkilerine dayalı olarak doğru tahminler yapmaktır. Bu rehber, projenin tüm aşamalarını ayrıntılı bir şekilde açıklamaktadır.
+**Proje Amacı:**
+
+- Oyuncuların piyasa değerlerini tahmin etmek için veriye dayalı bir model oluşturmak.
+
+- Kulüp transfer stratejilerine katkı sağlamak ve futbolcu değerlendirme sürecini daha verimli hale getirmek.
+
+  - Transfer Stratejileri: Takımların, oyuncuların potansiyel piyasa değerlerini tahmin ederek transfer pazarlıklarında daha iyi kararlar alabilmesini sağlamak.
+
+  - Kaynak Verimliliği: Kısıtlı transfer bütçelerini en iyi şekilde kullanabilmek için veriye dayalı karar verme mekanizmaları oluşturmak.
+
+  - Adil Değerlendirme: Oyuncuların istatistiksel performans verilerine dayalı olarak tarafsız bir değerlendirme sağlayarak subjektif faktörlerin etkisini azaltmak.
 
 ## Veri Hazırlama Teknikleri 🛠️📈🔍
 
 ### 1. Eksik ve Gereksiz Verilerin Temizlenmesi 🧹✂️💾
-- **Eksik Veriler**: Veri setindeki eksik değerler tespit edildi ve uygun yöntemlerle dolduruldu.
-  - Örneğin, "Maç", "Gol", "Asist" gibi sayısal sütunlar için eksik değerler sütun ortalaması ile dolduruldu.
-  - Kategorik sütunlarda eksik değer olmadığı için ek bir işlem gerekmedi.
+- **Eksik Veriler**: Veri setlerinde eksik veriler sıkça karşılaşılan bir durumdur ve bu veriler, modelin performansını ve doğruluğunu olumsuz etkileyebilir. Bu nedenle, eksik verilerin dikkatlice ele alınması gerekmektedir. Veri setindeki eksik değerler, ilgili sütunlarda NaN veya boş değer olarak tespit edilmiştir. Bu işlemi gerçekleştirmek için aşağıdaki Python kodu kullanılmıştır:
 ```python
 # Eksik veri kontrolü
 print("Eksik değerler:\n", df.isnull().sum())
 ```
-![Eksik veriler](null.PNG)
+![Eksik veriler](image/null.PNG)
 
 - **Gereksiz Veriler**:
-  - "Ad" ve "Doğum Tarihi" gibi modelin performansına katkı sağlamayan sütunlar analizden çıkarıldı.
+  - Bazı sütunlar modelin performansına doğrudan katkı sağlamadığı için veri setinden çıkarılmıştır. Bu adım, veriyi daha sade hale getirir ve modelin öğrenme sürecini optimize eder.
+  - "Ad": Oyuncunun adı modelin tahmin yeteneği üzerinde bir etkisi olmadığından çıkarılmıştır.
+  - "Doğum Tarihi": "Yaş" gibi daha anlamlı bir bilgi zaten veri setinde bulunduğundan, bu sütunun kullanılması gereksiz olmuştur.
 ```python
 columns_to_drop = ['Ad','Doğum Tarihi']  # Gereksiz kolonlar
 df_cleaned = df_cleaned.drop(columns=columns_to_drop, axis=1)
 ```
 - **Sütunları Türkçeye Çevirme**:
-  - Featurelar daha anlaşılır bir hale getirildi.
+  - Veri setindeki sütun isimlerinin daha anlaşılır hale getirilmesi, analiz ve modelleme süreçlerini kolaylaştırır. Bu adımda, orijinal sütun isimleri Türkçeye çevrilerek daha anlamlı hale getirilmiştir.
 ```python
 # Feature isimlerini Türkçeye çevirelim
 df.rename(columns={
@@ -38,9 +48,14 @@ df.rename(columns={
     'İ.O/M': 'İsabetli_Orta/Maç',
 }, inplace=True)
 ```
+Bu adım, veri setinin çok daha okunabilir hale gelmesini sağlamıştır ve kod geliştirme sürecinde karmaşayı azaltmıştır.
 
 ### 2. Sayısal Verilerin Dönüştürülmesi 🔄📉📈
-- **Sayısal Verilerin Formatlanması**: Virgül yerine nokta kullanımı sağlanmış ve sayısal sütunlar uygun türlere dönüştürülmüştür.
+Bazı veri sütunlarında virgül (",") kullanımı nedeniyle sayısal verilere erişim ve işlem yapmak zorlaşabilmektedir. Bu nedenle tüm sayısal verilerde virgül yerine nokta kullanılması sağlanmış ve veriler uygun türlere dönüştürülmüştür.
+- **Sayısal Verilerin Formatlanması**: 
+  - ***Piyasa Değeri Sütunu:*** Bu sütundaki tüm "." ve "," karakterleri temizlenmiş, veriler sayısal türe dönüştürülmüştür.
+  - ***Diğer Sütunlar:*** Sayısal veri içeren diğer sütunlarda benzer temizlik ve dönüştürme işlemleri uygulanmıştır.
+
 
 
 ```python
@@ -65,7 +80,9 @@ for column in columns_to_clean:
 ```
 
 ### 3. Hatalı Değerlerin Düzeltilmesi ve Eksik Verilerin Yönetimi 🛠️💡
-- "Yaş" sütunundaki parantezler temizlenmiş ve hatalı yaş değerleri düzeltilmiştir.
+- **Hatalı Değerlerin Düzeltilmesi**
+
+  - Bazı sütunlarda hatalı veri girişleri tespit edilmiştir. Örneğin, "Yaş" sütununda yer alan hatalı girişler (ör. 0 değeri) modelin doğruluğunu olumsuz etkileyebilir. Bu değerler aşağıdaki şekilde düzeltilmiştir:
 
 ```python
 # "Yaş" sütunundaki parantezleri temizleme
@@ -75,7 +92,7 @@ df['Yaş'] = df['Yaş'].str.extract(r'(\d+)').astype(float)
 df_cleaned.loc[df['Yaş'] == 0, 'Yaş'] = 25
 ```
 
-- Eksik değerler, uygun yöntemlerle giderilmiştir.
+- Eksik değerler, uygun yöntemlerle giderilmiştir. Özellikle sayısal sütunlarda eksik değerler sütun ortalaması ile doldurulmuştur. Bu işlem, sütun içindeki genel dağılımı bozmadan eksik verileri tamamlar.
 
 ```python
 # Eksik değer içeren satırları silme
@@ -93,14 +110,14 @@ df_cleaned['Asist'] = df_cleaned['Asist'].fillna(df_cleaned['Asist'].mean())
 ```
 
 ### 4. Verilerin Kategorize Edilmesi 📊🔢🎨
-- "Kaleci" pozisyonunda olan oyuncular veri setinden çıkarılmıştır.
+- "Kaleci" pozisyonunda olan oyuncular, diğer pozisyonlara kıyasla farklı istatistiklere sahip olduğu için analiz ve modelleme sürecinden çıkarılmıştır. Bu işlem aşağıdaki kod ile gerçekleştirilmiştir:
 
 ```python
 # Pozisyon sütununda "Kaleci" olan oyuncuları filtreleme
 df_cleaned = df[~df['Pozisyon'].str.contains("Kaleci", case=False, na=False)]
 ```
 
-- Kategorik sütunlar sayısal değerlere dönüştürülmüştür.
+- Kategorik sütunlar, modelleme sürecine uygun hale getirilmek için sayısal değerlere dönüştürülmüştür. Bu işlem, LabelEncoder kullanılarak gerçekleştirilmiştir:
 
 ```python
 from sklearn.preprocessing import LabelEncoder
@@ -113,7 +130,7 @@ df_cleaned['Pozisyon_encoded'] = le.fit_transform(df_cleaned['Pozisyon'])
 ```
 
 ### 5. Kategorik ve Sayısal Sütunların Ayrılması 🏷️📊
-- Veri setindeki sütunlar, türlerine göre ayrılmıştır.
+- Veri setindeki sütunlar, türlerine göre kategorik ve sayısal olarak ayrılmıştır. Bu ayrım, veri analizinde ve modelleme süreçlerinde daha fazla esneklik sağlamaktadır.
 
 ```python
 # Sütunları kategorik ve sayısal olarak ayırma
@@ -123,7 +140,7 @@ non_categorical_columns = [col for col in df_cleaned.columns if col not in categ
 ```
 
 ### 6. Logaritmik Dönüşüm ve Analiz 🔄📈
-  - "Piyasa Değeri" sütunu modellerin performans analizi açısından çok fazla büyük değerlere sahip olduğu için logaritmik dönüşüme tabi tutulmuş ve dağılım incelenmiştir:
+  - "Piyasa Değeri" sütunu modellerin performans analizi açısından çok fazla büyük değerlere sahip olduğu için logaritmik dönüşüme tabi tutulmuş ve dağılım incelenmiştir
 ```python
 # Log dönüşüm
 df_cleaned['Piyasa Değeri (Log)'] = np.log1p(df_cleaned['Piyasa Değeri'])
@@ -137,7 +154,7 @@ plt.ylabel('Frekans')
 plt.grid(axis='y', linestyle='--', alpha=0.7)
 plt.show()
 ```
-![Logaritmik Dönüşüm](2.PNG)
+![Logaritmik Dönüşüm](image/2.PNG)
 
 ### 7. Grafiksel Analiz ve Görselleştirme 📊📈🎥
 - Veri dağılımını anlamak için histogramlar ve kutu grafikleri oluşturuldu.
@@ -151,9 +168,10 @@ sns.heatmap(correlation_matrix, annot=True, fmt=".2f", cmap='coolwarm', cbar=Tru
 plt.title('Korelasyon Matrisi', fontsize=16)
 plt.show()
 ```
-![Korelasyon Matrisi](3.PNG)
+![Korelasyon Matrisi](image/3.PNG)
 
 - **Histogram Örneği**:
+Bu bölümde, veri setindeki sütunların dağılımları histogramlar kullanılarak analiz edilmiştir. Sayısal ve kategorik verilerin daha iyi anlaşılması amacıyla ayrı grafikler oluşturulmuştur.
 ```python
 # Nümerik sütunları seçme
 numerical_columns = df_cleaned.select_dtypes(include=['number']).columns
@@ -181,11 +199,13 @@ for column in encoded_columns:
     plt.grid(axis='y', linestyle='--', alpha=0.7)
     plt.show()
 ```
-![Histogram](4.PNG)
-![Histogram_2](5.PNG)
-![Yas_box](6.PNG)
-![Pozisyon_box](7.PNG)
-![ülke_box](8.PNG)
+Histogramlar, veri setindeki sayısal ve kategorik değişkenlerin dağılımlarını göstermektedir.
+
+![Histogram](image/4.PNG)
+![Histogram_2](image/5.PNG)
+![Yas_box](image/6.PNG)
+![Pozisyon_box](image/7.PNG)
+![ülke_box](image/8.PNG)
 
 ### 8. İşlenebilir Verinin Elde Edilmesi 🏗️✅📂
 Bu adımlar sonucunda, eksiksiz, kategorik verileri sayısal hale getirilmiş ve uç değerlerden arındırılmış bir veri seti elde edilmiştir. Bu veri, makine öğrenmesi modelleri için hazır hale getirilmiştir.
@@ -245,7 +265,7 @@ dt_reg = DecisionTreeRegressor()
 dt_reg.fit(X_train, y_train)
 y_pred_dt_reg = dt_reg.predict(X_test)
 ```
-![XGBoost](9.PNG)
+![XGBoost](image/9.PNG)
 
 ### 4. Performans Değerlendirme 📋📉✅
 Modellerin performansı, Mean Squared Error (MSE) ve R² Skoru kullanılarak değerlendirilmiştir.
@@ -275,14 +295,15 @@ print("Mean Squared Error:", mean_squared_error(y_test, y_pred_dt_reg))
 ### 5. Modellerin Karşılaştırılması 🥇🥈🥉
 Aşağıda, uygulanan algoritmaların performans karşılaştırması verilmiştir:
 
-| Model               | MSE   | R² Skoru |
-|---------------------|--------|----------|
-| Linear Regression   | 1.7333 | 0.655190 |
-| Random Forest       | 1.2790 | 0.837311 |
-| Decision Tree       | 2.6346 | 0.293911 |
-| XGBoost             | 1.2372 | 0.854052 |
+| Model               |MAE | MSE   | R² Skoru |
+|---------------------|--|----------|----------|
+| Linear Regression   |1.059851 | 1.7333 | 0.655190 |
+| Random Forest       |0.896791 | 1.2790 | 0.837311 |
+| Decision Tree       |1.274155| 2.6346 | 0.293911 |
+| XGBoost             |0.860947 | 1.2372 | 0.854052 |
 
 ### 6. En İyi Modelin Belirlenmesi ve Hiperparametre Optimizasyonu ✨
+Performans karşılaştırmalarına dayanarak, en yüksek R² skoruna sahip model seçilmiştir. Ayrıca, XGBoost modeli için manuel hiperparametre arama gerçekleştirilmiştir.
 ```python
 best_model = performance_df.loc[performance_df['R2 Score'].idxmax()]
 print("En İyi Model:\n", best_model)
@@ -320,9 +341,10 @@ y_pred_best = best_model.predict(X_test)
 print("Mean Squared Error (MSE):", mean_squared_error(y_test, y_pred_best))
 print("Mean Absolute Error (MAE):", mean_absolute_error(y_test, y_pred_best))
 ```
-![Best_Model](11.PNG)
+![Best_Model](image/11.PNG)
 
 ### 7. Gerçek vs. Tahmin Görselleştirmesi 🎨
+Tahmin edilen ve gerçek piyasa değerleri, scatter plot ile görselleştirilmiştir. Bu, model performansını görsel olarak değerlendirmek için etkili bir yöntemdir.
 ```python
 plt.figure(figsize=(10, 6))
 plt.scatter(y_test, y_pred_xgb, alpha=0.6, color='blue')
@@ -332,7 +354,9 @@ plt.xlabel('Gerçek Piyasa Değeri')
 plt.ylabel('Tahmin Edilen Piyasa Değeri')
 plt.show()
 ```
-![Graph](12.PNG)
+![Graph](image/12.PNG)
+
+Bu adımlar, model optimizasyonu ve tahmin doğruluğunu görselleştirme süreçlerini kapsamaktadır.
 
 ---
 
@@ -345,7 +369,10 @@ plt.show()
 
 ### 2. Model Sonuçlarının Yorumlanması 🧠💬🔍
 - Yüksek korelasyon gösteren değişkenler, model performansını olumlu etkilemiştir.
-- "Yaş" ve "Pozisyon" değişkenlerinin piyasa değeri üzerinde belirgin bir etkisi olduğu gözlemlenmiştir.
+- "Yaş", "Gol", "Asist" ve "Pozisyon" değişkenlerinin piyasa değeri üzerinde belirgin bir etkisi olduğu gözlemlenmiştir.
+- R² = 0.89, modelin yüksek bir açıklama gücüne sahip olduğunu ve bağımsız değişkenlerin piyasa değerini oldukça iyi açıkladığını gösterir.
+- MSE, tahminlerin gerçek piyasa değerinden ortalama 1.133 birim kare hata ile saptığını gösterir. Bu değer, hataların kareli olduğundan büyük sapmalara karşı daha hassastır. Hedef değişkenin birimi milyon euro olduğuna göre, MSE’nin birimi (milyon euro)^2 olacaktır. Bu durumda, 1.133 MSE, hataların büyüklüğünün kareler ortalamasının yaklaşık 1.133 milyon euro kare olduğunu gösterir. MSE, özellikle büyük hatalara karşı duyarlı olduğu için uç değerlerin bu değeri artırmış olabileceği düşünülebilir. Daha dengeli bir analiz için MAE'ye de bakmak gereklidir.
+- MAE modelin tahmin ettiği piyasa değerlerinin, gerçek değerlerden ortalama 0.83 milyon euro sapma gösterdiğini ifade eder. Bu metrik, hataların mutlak değerlerini dikkate aldığından, uç değerlerin etkisi daha azdır. 0.83 milyon euro hata, modelin tahminlerinin oldukça yakın olduğunu gösterir. Örneğin, bir oyuncunun tahmin edilen piyasa değeri 10 milyon euro iken gerçek değeri 10.83 milyon euro olabilir. Veri setindeki piyasa değerleri genellikle 10 - 50 - 100 milyon euro civarında, 0.83 milyon euro hata oldukça düşüktür ve modelin başarılı olduğunu gösterir. Ancak piyasa değerleri genellikle 1-2 milyon euro aralığında olsaydı, 0.83 milyon euro hata görece daha büyüktür.
 
 ### 3. Öne Çıkan Bulgular 🌟📊📚
 - Verilerin logaritmik dönüşüm ile işlenmesi, model performansını önemli ölçüde artırmıştır.
@@ -359,3 +386,5 @@ plt.show()
 ---
 
 Proje, futbol oyuncularının piyasa değerini tahmin etmede başarılı bir çözüm sunmuş ve makine öğrenmesi tekniklerinin etkili bir şekilde uygulanabileceğini göstermiştir. Gelecekte yapılacak geliştirmelerle bu tür projeler daha geniş kapsamlı hale getirilebilir. 🌍📈⚽
+
+➤ Açıklama Videosu : [`Market Value Prediction`](https://youtu.be/lAuHN8xojHo)
