@@ -388,4 +388,5 @@ Bu adımlar, model optimizasyonu ve tahmin doğruluğunu görselleştirme süre�
 Proje, futbol oyuncularının piyasa değerini tahmin etmede başarılı bir çözüm sunmuş ve makine öğrenmesi tekniklerinin etkili bir şekilde uygulanabileceğini göstermiştir. Gelecekte yapılacak geliştirmelerle bu tür projeler daha geniş kapsamlı hale getirilebilir. 🌍📈⚽
 
 ➤ Açıklama Videosu : [`Market Value Prediction`](https://youtu.be/lAuHN8xojHo)
+
 ➤ Sertifika : [`Sertifika`](Python_ile_Makine_Öğrenmesi_Sertifika.pdf)
