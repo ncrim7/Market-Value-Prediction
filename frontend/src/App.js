@@ -11,7 +11,7 @@ function App() {
   const [predictions, setPredictions] = useState([]);
 
   // API base URL - production'da environment variable kullanın
-  const API_BASE = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+  const API_BASE = process.env.REACT_APP_API_URL || 'https://market-value-prediction-backend.onrender.com';
 
   // Format currency
   const formatCurrency = (value) => {
@@ -39,7 +39,7 @@ function App() {
     setLoading(true);
     
     try {
-      const response = await fetch(`${API_BASE}/api/predict`, {
+      const response = await fetch(`https://market-value-prediction-backend.onrender.com/api/predict`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -93,7 +93,7 @@ function App() {
   useEffect(() => {
     const fetchHistory = async () => {
       try {
-        const response = await fetch(`${API_BASE}/api/predictions/history`);
+        const response = await fetch(`https://market-value-prediction-backend.onrender.com/api/predictions/history`);
         if (response.ok) {
           const data = await response.json();
           setPredictions(data.slice(0, 5));
@@ -104,7 +104,7 @@ function App() {
     };
 
     fetchHistory();
-  }, [API_BASE]);
+  }, ["https://market-value-prediction-backend.onrender.com"]);
 
   return (
     <div className="min-h-screen text-white relative overflow-x-hidden" 
