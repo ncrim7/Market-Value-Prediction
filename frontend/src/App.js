@@ -11,7 +11,7 @@ function App() {
   const [predictions, setPredictions] = useState([]);
 
   // API base URL - production'da environment variable kullanın
-  const API_BASE = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+  const API_BASE = process.env.REACT_APP_API_URL || 'https://market-value-prediction-backend.onrender.com';
 
   // Format currency
   const formatCurrency = (value) => {
