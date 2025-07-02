@@ -104,7 +104,7 @@ function App() {
     };
 
     fetchHistory();
-  }, [API_BASE]);
+  }, ["https://market-value-prediction-backend.onrender.com"]);
 
   return (
     <div className="min-h-screen text-white relative overflow-x-hidden" 
