@@ -35,7 +35,7 @@ app.post('/api/predict', async (req, res) => {
       }
     }
     // ML servisine istek at
-    const mlRes = await axios.post(`/predict`, req.body);
+    const mlRes = await axios.post(`${ML_SERVICE_URL}/predict`, req.body);
     res.json(mlRes.data);
   } catch (err) {
     if (err.response) {
