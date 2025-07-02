@@ -9,7 +9,7 @@ from pymongo import MongoClient
 from datetime import datetime
 
 # Environment variables
-MONGO_URI = os.getenv("https://market-value-prediction.onrender.com/docs#/default/predict_predict_post", "mongodb+srv://cirim12:WZo4jHANAHxj620H@mvpcluster.ncqo3eb.mongodb.net/?retryWrites=true&w=majority&appName=mvpcluster")
+MONGO_URI = os.getenv("MONGO_URI", "mongodb+srv://cirim12:WZo4jHANAHxj620H@mvpcluster.ncqo3eb.mongodb.net/?retryWrites=true&w=majority&appName=mvpcluster")
 
 MODEL_PATH = os.getenv("MODEL_PATH", "xgboost_model_mvp.pkl")
 
@@ -26,7 +26,7 @@ app.add_middleware(
 )
 
 # MongoDB
-client = MongoClient("mongodb+srv://cirim12:WZo4jHANAHxj620H@mvpcluster.ncqo3eb.mongodb.net/?retryWrites=true&w=majority&appName=mvpcluster")
+client = MongoClient(MONGO_URI)
 mongo_db = client["football_predictor"]
 predictions_collection = mongo_db["predictions"]
 
