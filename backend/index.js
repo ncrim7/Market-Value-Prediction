@@ -8,19 +8,19 @@ require('dotenv').config();
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-const ML_SERVICE_URL = process.env.ML_SERVICE_URL || 'http://localhost:8000';
+const ML_SERVICE_URL = process.env.ML_SERVICE_URL || 'https://market-value-prediction.onrender.com';
 
 app.use(express.json());
 app.use(cors());
 app.use(helmet());
 app.use(morgan('dev'));
 
-app.get('https://market-value-prediction.onrender.com/api/health', (req, res) => {
+app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', message: 'Backend çalışıyor!' });
 });
 
 // ML servisine tahmin isteği atan endpoint
-app.post('https://market-value-prediction.onrender.com/api/predict', async (req, res) => {
+app.post('/api/predict', async (req, res) => {
   try {
     // Girdi validasyonu (örnek: zorunlu alanlar)
     const requiredFields = [
@@ -35,7 +35,7 @@ app.post('https://market-value-prediction.onrender.com/api/predict', async (req,
       }
     }
     // ML servisine istek at
-    const mlRes = await axios.post(`https://market-value-prediction.onrender.com/predict`, req.body);
+    const mlRes = await axios.post(`/predict`, req.body);
     res.json(mlRes.data);
   } catch (err) {
     if (err.response) {
