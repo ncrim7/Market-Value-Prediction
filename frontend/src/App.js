@@ -39,7 +39,7 @@ function App() {
     setLoading(true);
     
     try {
-      const response = await fetch(`${API_BASE}/api/predict`, {
+      const response = await fetch(`https://market-value-prediction-backend.onrender.com/api/predict`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -93,7 +93,7 @@ function App() {
   useEffect(() => {
     const fetchHistory = async () => {
       try {
-        const response = await fetch(`${API_BASE}/api/predictions/history`);
+        const response = await fetch(`https://market-value-prediction-backend.onrender.com/api/predictions/history`);
         if (response.ok) {
           const data = await response.json();
           setPredictions(data.slice(0, 5));
