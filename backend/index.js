@@ -15,12 +15,12 @@ app.use(cors());
 app.use(helmet());
 app.use(morgan('dev'));
 
-app.get('/api/health', (req, res) => {
+app.get('https://market-value-prediction.onrender.com/api/health', (req, res) => {
   res.json({ status: 'ok', message: 'Backend çalışıyor!' });
 });
 
 // ML servisine tahmin isteği atan endpoint
-app.post('/api/predict', async (req, res) => {
+app.post('https://market-value-prediction.onrender.com/api/predict', async (req, res) => {
   try {
     // Girdi validasyonu (örnek: zorunlu alanlar)
     const requiredFields = [
@@ -35,7 +35,7 @@ app.post('/api/predict', async (req, res) => {
       }
     }
     // ML servisine istek at
-    const mlRes = await axios.post(`${ML_SERVICE_URL}/predict`, req.body);
+    const mlRes = await axios.post(`https://market-value-prediction.onrender.com/predict`, req.body);
     res.json(mlRes.data);
   } catch (err) {
     if (err.response) {
