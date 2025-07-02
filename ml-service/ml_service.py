@@ -9,8 +9,8 @@ from pymongo import MongoClient
 from datetime import datetime
 
 # Environment variables
-MONGO_URI = os.getenv("MONGO_URI", "mongodb://localhost:27017/")
-MODEL_PATH = os.getenv("MODEL_PATH", "C:/Users/cirim/Desktop/mvp/ml-service/xgboost_model_mvp.pkl")
+MONGO_URI = os.getenv("MONGO_URI", "mongodb+srv://cirim12:<WZo4jHANAHxj620H>@mvpcluster.ncqo3eb.mongodb.net/")
+MODEL_PATH = os.getenv("MODEL_PATH", "ml-service/xgboost_model_mvp.pkl")
 
 # FastAPI app
 app = FastAPI()
