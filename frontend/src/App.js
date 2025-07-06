@@ -4,6 +4,8 @@ import Header from './components/Header';
 import FootballForm from './components/FootballForm';
 import ResultCard from './components/ResultCard';
 import InfoGrid from './components/InfoGrid';
+import AnalyticsDashboard from './components/AnalyticsDashboard';
+import { analytics } from './utils/analytics';
 
 function App() {
   const [result, setResult] = useState(null);
@@ -11,7 +13,7 @@ function App() {
   const [predictions, setPredictions] = useState([]);
 
   // API base URL - production'da environment variable kullanın
-  const API_BASE = process.env.REACT_APP_API_URL || 'https://market-value-prediction-backend.onrender.com';
+  const API_BASE = process.env.REACT_APP_API_URL || 'http://localhost:5000';
 
   // Format currency
   const formatCurrency = (value) => {
@@ -38,8 +40,11 @@ function App() {
   const handlePrediction = async (formData) => {
     setLoading(true);
     
+    // Form gönderimi logla
+    analytics.logFormSubmission(formData);
+    
     try {
-      const response = await fetch(`https://market-value-prediction-backend.onrender.com/api/predict`, {
+      const response = await fetch(`${API_BASE}/api/predict`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -62,6 +67,9 @@ function App() {
         
         setResult(newResult);
         
+        // Başarılı tahmin logla
+        analytics.logPredictionResult(true);
+        
         // Save to history
         const newPrediction = {
           id: Date.now(),
@@ -83,6 +91,8 @@ function App() {
         errorMessage = 'Sunucu hatası. Lütfen daha sonra tekrar deneyin.';
       }
       
+      // Hata logla
+      analytics.logPredictionResult(false, errorMessage);
       setResult({ error: errorMessage });
     } finally {
       setLoading(false);
@@ -93,7 +103,7 @@ function App() {
   useEffect(() => {
     const fetchHistory = async () => {
       try {
-        const response = await fetch(`https://market-value-prediction-backend.onrender.com/api/predictions/history`);
+        const response = await fetch(`${API_BASE}/api/predictions/history`);
         if (response.ok) {
           const data = await response.json();
           setPredictions(data.slice(0, 5));
@@ -104,7 +114,7 @@ function App() {
     };
 
     fetchHistory();
-  }, ["https://market-value-prediction-backend.onrender.com"]);
+  }, [API_BASE]);
 
   return (
     <div className="min-h-screen text-white relative overflow-x-hidden" 
@@ -162,6 +172,9 @@ function App() {
             </div>
           </div>
         )}
+
+        {/* Analytics Dashboard */}
+        <AnalyticsDashboard />
 
         {/* Feature Grid */}
         <InfoGrid />
